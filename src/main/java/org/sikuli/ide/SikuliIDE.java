@@ -1736,6 +1736,7 @@ public class SikuliIDE extends JFrame {
 
     protected void runPython(File f) throws Exception {
       File path = new File(SikuliIDE.getInstance().getCurrentBundlePath());
+      File parent = path.getParentFile();
       IScriptRunner srunner = SikuliScript.getScriptRunner("jython", null, Settings.getArgs());
       if (srunner == null) {
         Debug.error("Could not load the Jython script runner");
@@ -1744,7 +1745,9 @@ public class SikuliIDE extends JFrame {
       addPythonCode(srunner);
       try {
         int ret = srunner.runScript(f, path, 
-                Settings.getArgs(), new String[] {_mainPane.getTitleAt(_mainPane.getSelectedIndex())});
+                Settings.getArgs(), 
+                new String[] {parent.getAbsolutePath(), 
+                              _mainPane.getTitleAt(_mainPane.getSelectedIndex())});
         addErrorMark(ret);
         srunner.close();
       } catch (Exception e) {
